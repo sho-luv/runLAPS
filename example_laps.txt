@@ -1,0 +1,12 @@
+DN:CN=computer1,OU=WSUS,OU=domain_computers,DC=acme,DC=local
+Password:WindowsServer2019
+DN:CN=computer2,OU=WSUS,OU=domain_computers,DC=acme,DC=local
+Password:S;5(7#8{h/i9M7E#
+DN:CN=computer3,OU=WSUS,OU=domain_computers,DC=acme,DC=local
+Password:Y87]@Y/bW&F5TVKT
+DN:CN=computer4,OU=WSUS,OU=domain_computers,DC=acme,DC=local
+Password:y;H0s,sc/9kUIRIo
+DN:CN=computer5,OU=WSUS,OU=domain_computers,DC=acme,DC=local
+Password:shwCI$D7q3274e43
+DN:CN=computer6,OU=WSUS,OU=domain_computers,DC=acme,DC=local
+Password:ZpUt;fav)F3.I29f
