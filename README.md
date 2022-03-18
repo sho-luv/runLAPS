@@ -9,16 +9,11 @@
 ### Why:
 Sometimes organizations change the name of their local administrator account. I have twice now been in a scenario where I was able to dump LAPS passwords but did not know the local administrator username because I did not have shell or domain creds yet. This can happen with ldap dump attacks. 
 
-If you have domain creds you can use impacket to lookup the sids with the tool [lookupsid.py](https://github.com/SecureAuthCorp/impacket/blob/master/examples/lookupsid.py). 
-
-However if you do not have domain credentials you can always bruteforce the local admin username. 
-
-This tool will help facilitate that effort.
+If you have domain creds you can use impacket to lookup the sids with the tool [lookupsid.py](https://github.com/SecureAuthCorp/impacket/blob/master/examples/lookupsid.py). However, if you do not have domain credentials you can always bruteforce the local admin username. This tool will help facilitate that effort.
 
 ### Example Laps Dump:
 
 This is a tool to parse laps dumps files and test the password against the identified host in the file with a user supplied username. 
-
 LAPS dumps can very from tool to tool, for instance this is what a dump looks like from `ntlmrelayx` with the `--dump-laps` option:
 
 ```plain
