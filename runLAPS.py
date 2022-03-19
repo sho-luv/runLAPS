@@ -75,46 +75,46 @@ def ntlmrelayx_laps(laps_file, username):
                     login(laps)
                 count = 0 
 
-def login(cls):
+def login(self):
     try:
         timeout = 1
 
         cprint("Testing host: %s and password: %s with username: %s" %
-                (cls.hostname, cls.password, cls.username))
+                (self.hostname, self.password, self.username))
         try:
-            smbClient = SMBConnection(cls.address, cls.address, None, 
+            smbClient = SMBConnection(self.hostname, self.hostname, None, 
                     sess_port=int(options.port), preferredDialect=SMB_DIALECT,
                     timeout=options.timout)
-            cls.smbv1 = True 
+            self.smbv1 = True 
         except Exception as e:
             pass
         try:
-            smbClient = SMBConnection(cls.hostname, cls.hostname,
+            smbClient = SMBConnection(self.hostname, self.hostname,
                     sess_port=int(options.port), timeout=timeout)
-            cls.smbv1 = False
+            self.smbv1 = False
         except Exception as e:
             pass
 
         try:
-            smbClient.login(cls.username, cls.password, cls.local_auth)
+            smbClient.login(self.username, self.password, self.local_auth)
         except Exception as e:
             if options.verbose:
                 logger.error(RED+"Connection to host "+hostname+" timedout"+NOCOLOR)
             return None
 
         # get computer information
-        cls.domain = smbClient.getServerDomain()
-        cls.fqdn = smbClient.getServerDNSDomainName()
-        cls.osVersion = smbClient.getServerOS()
-        cls.os_arch = get_os_arch(cls.ipAddress)
-        cls.signing = smbClient.isSigningRequired()
+        self.domain = smbClient.getServerDomain()
+        self.fqdn = smbClient.getServerDNSDomainName()
+        self.osVersion = smbClient.getServerOS()
+        self.os_arch = get_os_arch(self.ipAddress)
+        self.signing = smbClient.isSigningRequired()
         try:
             smbClient.connectTree("C$")
-            cls.admin_privs = True
+            self.admin_privs = True
         except Exception as e:
             pass
 
-        print_info(cls)
+        print_info(self)
 
     except Exception as e:
         if logging.getLogger().level == logging.DEBUG:
@@ -144,43 +144,45 @@ def get_os_arch(ipAddress):
 
     return 0
 
-def is_admin(cls):
-    if cls.admin_privs: 
+def is_admin(self):
+    if self.admin_privs: 
         print(LIGHTGREEN+"[*] "+NOCOLOR, end = '')
     else:
-        print(RED+"[*] "+NOCOLOR, end = '')
+        print(BLUE+"[*] "+NOCOLOR, end = '')
 
 
-def print_info(cls):
+def print_info(self):
 
-        is_admin(cls)
-        print(cls.osVersion+" "+str(cls.os_arch)+" (name:"+cls.hostname+") (domain:"+
-                cls.fqdn+") (signing:"+str(cls.signing)+") (SMBv1:"+
-                str(cls.smbv1)+")"+NOCOLOR, end='')
+        is_admin(self)
+        print(self.osVersion+" "+str(self.os_arch)+" (name:"+self.hostname+") (domain:"+
+                self.fqdn+") (signing:"+str(self.signing)+") (SMBv1:"+
+                str(self.smbv1)+")"+NOCOLOR, end='')
 
-        if cls.admin_privs:
+        if self.admin_privs:
             print(YELLOW+" Owned!!"+NOCOLOR)
-            is_admin(cls)
+            is_admin(self)
             print("Local accounts admin rights:")
         else:
             print()
-            is_admin(cls)
+            is_admin(self)
             print("Local accounts without admin rights:")
 
-        is_admin(cls)
-        print("wmiexec.py \'"+cls.username+":"+cls.password+"\'@"+cls.ipAddress+NOCOLOR)
-        is_admin(cls)
-        print("crackmapexec smb "+cls.hostname+" -u "+cls.username+" -p "+cls.password+NOCOLOR+"\n")
+        is_admin(self)
+        print("wmiexec.py \'"+self.username+":"+self.password+"\'@"+self.ipAddress+NOCOLOR)
+        is_admin(self)
+        print("crackmapexec smb "+self.hostname+" -u "+self.username+" -p "+self.password+NOCOLOR+"\n")
 
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='This program reads LAPS dumps and attempts to verify them')
     parser.add_argument('-f', action='store', metavar='laps file', help='ntlmrelayx laps format file')
-    parser.add_argument('-u', action='store', metavar='username or file', help='username or file to try')
+    parser.add_argument('-u', action='store', metavar='username or file', default='administrator', help='username or file to try, Default=Administrator')
     parser.add_argument('-v','--verbose', action='store_true', help='view verbose messages')
     group = parser.add_argument_group('connection')
     group.add_argument('-port', choices=['139', '445'], nargs='?', default='445', metavar="destination port",
-                       help='Destination port to connect to SMB Server')
+                       help='Destination port to connect to SMB port (default: 445)')
+    group.add_argument("-t","-timeout", metavar='sec', help="SMB connection timeout, default 3 secondes", type=int, default=3)
+
 
     if len(sys.argv)==1:
         parser.print_help()
