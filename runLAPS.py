@@ -170,7 +170,7 @@ def print_info(self):
         is_admin(self)
         print("wmiexec.py \'"+self.username+":"+self.password+"\'@"+self.ipAddress+NOCOLOR)
         is_admin(self)
-        print("crackmapexec smb "+self.hostname+" -u "+self.username+" -p "+self.password+NOCOLOR+"\n")
+        print("crackmapexec smb "+self.hostname+" -u "+self.username+" -p '"+self.password+NOCOLOR+"' --local-auth\n")
 
 
 if __name__ == '__main__':
